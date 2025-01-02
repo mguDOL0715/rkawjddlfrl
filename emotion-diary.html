@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Diary</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background-color 0.5s;
+        }
+        .button-container {
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #happy {
+            background-color: #fce94f;
+        }
+        #sad {
+            background-color: #729fcf;
+        }
+        #angry {
+            background-color: #ef2929;
+        }
+        textarea {
+            width: 300px;
+            height: 150px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        #save {
+            background-color: #8ae234;
+            color: white;
+        }
+        #diary {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 400px;
+            text-align: left;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button id="happy">Happy</button>
+        <button id="sad">Sad</button>
+        <button id="angry">Angry</button>
+    </div>
+    <textarea id="entry" placeholder="Write your feelings here..."></textarea>
+    <button id="save">Save Diary</button>
+    <div id="diary"></div>
+
+    <script>
+        const body = document.body;
+        const happyButton = document.getElementById('happy');
+        const sadButton = document.getElementById('sad');
+        const angryButton = document.getElementById('angry');
+        const saveButton = document.getElementById('save');
+        const entry = document.getElementById('entry');
+        const diary = document.getElementById('diary');
+
+        happyButton.addEventListener('click', () => {
+            body.style.backgroundColor = '#fce94f';
+        });
+
+        sadButton.addEventListener('click', () => {
+            body.style.backgroundColor = '#729fcf';
+        });
+
+        angryButton.addEventListener('click', () => {
+            body.style.backgroundColor = '#ef2929';
+        });
+
+        saveButton.addEventListener('click', () => {
+            const text = entry.value.trim();
+            if (text) {
+                const paragraph = document.createElement('p');
+                paragraph.textContent = text;
+                diary.appendChild(paragraph);
+                entry.value = '';
+            } else {
+                alert('Please write something before saving!');
+            }
+        });
+    </script>
+</body>
+</html>
