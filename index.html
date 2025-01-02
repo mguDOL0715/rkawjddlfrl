@@ -36,9 +36,8 @@
         #angry {
             background-color: #ef2929;
         }
-        textarea {
+        textarea, input[type="date"] {
             width: 300px;
-            height: 150px;
             margin-bottom: 10px;
             font-size: 16px;
             padding: 10px;
@@ -49,24 +48,41 @@
             background-color: #8ae234;
             color: white;
         }
-        #diary {
+        nav {
             margin-top: 20px;
-            width: 80%;
-            max-width: 400px;
-            text-align: left;
-            font-size: 16px;
+        }
+        nav a {
+            text-decoration: none;
+            font-size: 18px;
+            margin: 0 10px;
+            color: #333;
+        }
+        nav a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="button-container">
-        <button id="happy">Happy</button>
-        <button id="sad">Sad</button>
-        <button id="angry">Angry</button>
+    <nav>
+        <a href="#" id="write-tab">Write Diary</a>
+        <a href="#" id="view-tab">View Diaries</a>
+    </nav>
+
+    <div id="write-section">
+        <div class="button-container">
+            <button id="happy">Happy</button>
+            <button id="sad">Sad</button>
+            <button id="angry">Angry</button>
+        </div>
+        <input type="date" id="date-picker">
+        <textarea id="entry" placeholder="Write your feelings here..."></textarea>
+        <button id="save">Save Diary</button>
     </div>
-    <textarea id="entry" placeholder="Write your feelings here..."></textarea>
-    <button id="save">Save Diary</button>
-    <div id="diary"></div>
+
+    <div id="view-section" style="display: none;">
+        <h2>Your Diaries</h2>
+        <div id="diary-list"></div>
+    </div>
 
     <script>
         const body = document.body;
@@ -75,7 +91,14 @@
         const angryButton = document.getElementById('angry');
         const saveButton = document.getElementById('save');
         const entry = document.getElementById('entry');
-        const diary = document.getElementById('diary');
+        const diaryList = document.getElementById('diary-list');
+        const datePicker = document.getElementById('date-picker');
+        const writeTab = document.getElementById('write-tab');
+        const viewTab = document.getElementById('view-tab');
+        const writeSection = document.getElementById('write-section');
+        const viewSection = document.getElementById('view-section');
+
+        let diaries = {};
 
         happyButton.addEventListener('click', () => {
             body.style.backgroundColor = '#fce94f';
@@ -91,14 +114,52 @@
 
         saveButton.addEventListener('click', () => {
             const text = entry.value.trim();
+            const date = datePicker.value;
+
+            if (!date) {
+                alert('Please select a date!');
+                return;
+            }
+
             if (text) {
-                const paragraph = document.createElement('p');
-                paragraph.textContent = text;
-                diary.appendChild(paragraph);
+                if (!diaries[date]) {
+                    diaries[date] = [];
+                }
+                diaries[date].push(text);
                 entry.value = '';
+                datePicker.value = '';
+                alert('Diary saved successfully!');
             } else {
                 alert('Please write something before saving!');
             }
+        });
+
+        writeTab.addEventListener('click', (e) => {
+            e.preventDefault();
+            writeSection.style.display = 'block';
+            viewSection.style.display = 'none';
+        });
+
+        viewTab.addEventListener('click', (e) => {
+            e.preventDefault();
+            writeSection.style.display = 'none';
+            viewSection.style.display = 'block';
+
+            diaryList.innerHTML = '';
+            Object.keys(diaries).forEach(date => {
+                const dateDiv = document.createElement('div');
+                const dateTitle = document.createElement('h3');
+                dateTitle.textContent = date;
+                dateDiv.appendChild(dateTitle);
+
+                diaries[date].forEach(entry => {
+                    const entryParagraph = document.createElement('p');
+                    entryParagraph.textContent = entry;
+                    dateDiv.appendChild(entryParagraph);
+                });
+
+                diaryList.appendChild(dateDiv);
+            });
         });
     </script>
 </body>
